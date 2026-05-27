@@ -1,0 +1,171 @@
+import requests
+import time
+import psycopg2
+
+from psycopg2.extras import Json, execute_values
+
+URL = "https://www.kucoin.com/_api/otc/ad/list"
+
+headers = {
+    "User-Agent": "Mozilla/5.0",
+    "Accept": "application/json"
+}
+
+markets = [
+    {
+        "change_type": 1,
+        "params": {
+            "status": "PUTUP",
+            "pageSize": 25,
+            "page": 1,
+            "currency": "USDT",
+            "legal": "RUB",
+            "side": "BUY",
+            "amount": "",
+            "payTypeCodes": "",
+            "sortCode": "PRICE",
+            "highQualityMerchant": 0,
+            "canDealOrder": "true"
+        }
+    },
+    {
+        "change_type": 3,
+        "params": {
+            "status": "PUTUP",
+            "pageSize": 25,
+            "page": 1,
+            "currency": "USDT",
+            "legal": "VND",
+            "side": "SELL",
+            "amount": "",
+            "payTypeCodes": "",
+            "sortCode": "PRICE",
+            "highQualityMerchant": 0,
+            "canDealOrder": "true"
+        }
+    }
+]
+
+conn = psycopg2.connect(
+    dbname="dwh",
+    user="bybitparser",
+    password="TokenPWforByBit",
+    host="46.21.81.183",
+    port="5432"
+)
+
+session = requests.Session()
+
+while True:
+
+    for market in markets:
+
+        change_type = market["change_type"]
+        params = market["params"]
+
+        try:
+
+            response = session.get(
+                URL,
+                params=params,
+                headers=headers,
+                timeout=15
+            )
+
+            response.raise_for_status()
+
+            data = response.json()
+
+            if not data.get("success"):
+                print(f"API ERROR change_type={change_type}")
+                continue
+
+            items = data.get("items", [])
+
+            if not items:
+                print(f"No items for change_type={change_type}")
+                continue
+
+            rows = []
+
+            for item in items:
+
+                try:
+
+                    seller = item.get("nickName", "unknown")
+
+                    price = float(item.get("floatPrice", 0))
+
+                    min_limit = float(item.get("limitMinQuote", 0))
+
+                    max_limit = float(item.get("limitMaxQuote", 0))
+
+                    payments = [
+                        p.get("payTypeCode")
+                        for p in item.get("adPayTypes", [])
+                    ]
+
+                    row = (
+                        seller,
+                        price,
+                        min_limit,
+                        max_limit,
+                        Json(payments)
+                    )
+
+                    rows.append(row)
+
+                except Exception as parse_error:
+
+                    print(f"PARSE ERROR: {parse_error}")
+
+            if not rows:
+                print(f"No parsed rows for change_type={change_type}")
+                continue
+
+            with conn.cursor() as cur:
+
+                cur.execute(
+                    """
+                    INSERT INTO raw_data.load_info (load_type)
+                    VALUES (2)
+                    RETURNING id
+                    """
+                )
+
+                load_id = cur.fetchone()[0]
+
+                execute_values(
+                    cur,
+                    """
+                    INSERT INTO raw_data.data_kucoin
+                    (
+                        change_type_id,
+                        seller,
+                        price,
+                        limit_min,
+                        limit_max,
+                        payments,
+                        load_id
+                    )
+                    VALUES %s
+                    """,
+                    [
+                        (change_type, s, p, mn, mx, pay, load_id)
+                        for s, p, mn, mx, pay in rows
+                    ]
+                )
+
+            conn.commit()
+
+            print(
+                f"Success insert change_type={change_type}, rows={len(rows)}"
+            )
+
+        except Exception as e:
+
+            conn.rollback()
+
+            print(f"ERROR change_type={change_type}: {e}")
+
+    time.sleep(90)
