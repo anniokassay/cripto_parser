@@ -1,3 +1,6 @@
+# Код деактивирован (binance убрал fiat RUB, не отдает данные по web):
+exit("Script deactivated")
+
 import requests
 import time
 import psycopg2
@@ -6,25 +9,35 @@ import json
 
 URL = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
 
+change_type = 3 # USDT-VND (SELL USDT)
+
 payload = {
-    "asset": "USDT",
-    "fiat": "RUB",
-    "merchantCheck": False,
-    "page": 1,
-    "payTypes": [],
-    "publisherType": None,
-    "rows": 10,
-    "tradeType": "BUY"
+  "asset": "USDT",
+  "fiat": "VND",
+  "merchantCheck": False,
+  "page": 1,
+  "payTypes": [],
+  "publisherType": None,
+  "rows": 25,
+  "tradeType": "SELL"
 }
 
 headers = {
-    "content-type": "application/json"
+    "accept": "*/*",
+    "content-type": "application/json",
+    "origin": "https://p2p.binance.com",
+    "referer": "https://p2p.binance.com/",
+    "user-agent": "Mozilla/5.0"
 }
 
-response = requests.post(
+session = requests.Session()
+
+session.get("https://p2p.binance.com/")
+
+response = session.post(
     URL,
-    headers=headers,
-    data=json.dumps(payload)
+    data=json.dumps(payload),
+    headers=headers
 )
 
 print(response.text)
@@ -41,11 +54,18 @@ while True:
 
     response = requests.post(
         URL,
-        json=payload,
+        data=json.dumps(payload),
         headers=headers
     )
 
     data = response.json()
+
+    print(data)
+
+    if not data.get("data"):
+        print("No data returned")
+        time.sleep(90)
+        continue
 
     rows = []
 
@@ -63,7 +83,9 @@ while True:
         )
 
         rows.append(row)
+
     print(rows)
+
     with conn.cursor() as cur:
 
         cur.execute(
