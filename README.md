@@ -1,2 +1,2 @@
 # cripto_parser
-PET_project of DWH architecture
+Demonstration project of DWH architecture
