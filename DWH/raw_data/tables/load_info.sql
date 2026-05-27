@@ -9,6 +9,7 @@ CREATE TABLE raw_data.load_info (
   CONSTRAINT load_info_load_type_fk FOREIGN KEY (load_type) REFERENCES dict.load_type(id)
 );
 
+CREATE INDEX load_info_id_idx ON raw_data.load_info(id);
 
 GRANT INSERT ON TABLE raw_data.load_info TO bybitparser;
 GRANT USAGE ON SEQUENCE raw_data.load_info_id_seq TO bybitparser;
