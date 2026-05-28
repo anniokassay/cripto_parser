@@ -7,10 +7,19 @@ Type=simple
 
 WorkingDirectory=/opt/py_bots
 
+EnvironmentFile=/etc/py_bots/parser.env
+User=pybots
+Group=pybots
+
 ExecStart=/opt/py_bots/venv/bin/python /opt/py_bots/kucoin_parser.py
 
 Restart=on-failure
 RestartSec=300
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
 
 StandardOutput=journal
 StandardError=journal
