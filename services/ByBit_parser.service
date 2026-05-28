@@ -1,0 +1,21 @@
+[Unit]
+Description=ByBit Parser
+After=network.target
+
+[Service]
+Type=simple
+
+WorkingDirectory=/opt/py_bots
+
+ExecStart=/opt/py_bots/venv/bin/python /opt/py_bots/kbybit_parser.py
+
+Restart=on-failure
+RestartSec=300
+
+StandardOutput=journal
+StandardError=journal
+
+StartLimitIntervalSec=0
+
+[Install]
+WantedBy=multi-user.target
