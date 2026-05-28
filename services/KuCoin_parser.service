@@ -1,3 +1,4 @@
+# Перенести по пути: /etc/systemd/system/kucoin_parser.service
 [Unit]
 Description=Kucoin Parser
 After=network.target

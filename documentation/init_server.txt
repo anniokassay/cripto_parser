@@ -17,3 +17,6 @@
   CREATE EXTENSION pg_cron;
   CREATE EXTENSION pg_stat_statements;
   CREATE EXTENSION tablefunc;
+
+## Настройки Piton_parsres_DB_access (services)
+## EnvironmentFile=/opt/py_bots/.env

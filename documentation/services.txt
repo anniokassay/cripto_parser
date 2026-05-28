@@ -1,1 +1,3 @@
-Сервисы отвечают хза подъем парсеров в случае их падений
+###Сервисы отвечают хза подъем парсеров в случае их падений
+  # nano /etc/systemd/system/bybit_parser.service
+  # nano /etc/systemd/system/kucoin_parser.service

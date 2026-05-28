@@ -1,3 +1,4 @@
+# Перенести по пути: /etc/systemd/system/bybit_parser.service
 [Unit]
 Description=ByBit Parser
 After=network.target
