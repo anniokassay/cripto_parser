@@ -1,0 +1,19 @@
+### Устанавливаем PG
+  sudo apt update
+  sudo apt install postgresql postgresql-contrib
+
+### Запуск сервера
+  sudo systemctl start postgresql
+  sudo systemctl enable postgresql
+### Настройки сервера
+  sudo -u postgres psql 
+  CREATE DATABASE dwh; #Создали dwh на сервера
+  
+# Добавить nano /etc/postgresql/12/main/postgresql.conf
+  shared_preload_libraries = 'pg_stat_statements,pg_cron'
+# Провести активацию super_user (dwh)
+  sudo systemctl restart postgresql
+  sudo -u postgres psql -d dwh #попадаем в ДВХ
+  CREATE EXTENSION pg_cron;
+  CREATE EXTENSION pg_stat_statements;
+  CREATE EXTENSION tablefunc;

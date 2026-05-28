@@ -11,7 +11,7 @@ EnvironmentFile=/etc/py_bots/parser.env
 User=pybots
 Group=pybots
 
-ExecStart=/opt/py_bots/venv/bin/python /opt/py_bots/kbybit_parser.py
+ExecStart=/opt/py_bots/venv/bin/python /opt/py_bots/bybit_parser.py
 
 Restart=on-failure
 RestartSec=300
