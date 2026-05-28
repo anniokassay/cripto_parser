@@ -5,16 +5,9 @@ CREATE TABLE raw_data.load_info (
   load_type   int NOT NULL,
   created_at  timestamptz DEFAULT clock_timestamp() NOT NULL,
 
+  CONSTRAINT load_info_pk PRIMARY KEY (id),
   CONSTRAINT load_info_load_type_fk FOREIGN KEY (load_type) REFERENCES dict.load_type(id)
-)
-PARTITION BY RANGE (created_at);
-
-CREATE TABLE raw_data.load_info_p_old PARTITION OF raw_data.load_info FOR VALUES FROM (MINVALUE) TO ('2026-01-01 00:00:00+00');
-CREATE TABLE raw_data.load_info_p2026h1 PARTITION OF raw_data.load_info FOR VALUES FROM ('2026-01-01 00:00:00+00') TO ('2026-07-01 00:00:00+00');
-CREATE TABLE raw_data.load_info_p2026h2 PARTITION OF raw_data.load_info FOR VALUES FROM ('2026-07-01 00:00:00+00') TO ('2027-01-01 00:00:00+00');
-CREATE TABLE raw_data.load_info_p2027h1 PARTITION OF raw_data.load_info FOR VALUES FROM ('2027-01-01 00:00:00+00') TO ('2027-07-01 00:00:00+00');
-CREATE TABLE raw_data.load_info_p2027h2 PARTITION OF raw_data.load_info FOR VALUES FROM ('2027-07-01 00:00:00+00') TO ('2028-01-01 00:00:00+00');
-CREATE TABLE raw_data.load_info_p_new PARTITION OF raw_data.load_info FOR VALUES FROM ('2028-01-01 00:00:00+00') TO (MAXVALUE);
+);
 
 CREATE INDEX load_info_id_idx ON raw_data.load_info(id);
 

@@ -54,6 +54,26 @@ def required_env(name):
     return value
 
 
+def log_error(conn, load_type, error_description):
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            INSERT INTO raw_data.load_info (load_type)
+            VALUES (%s)
+            RETURNING id
+            """,
+            (load_type,)
+        )
+        load_id = cur.fetchone()[0]
+        cur.execute(
+            """
+            INSERT INTO raw_data.load_error_log (load_id, error_description)
+            VALUES (%s, %s)
+            """,
+            (load_id, error_description)
+        )
+
+
 conn = psycopg2.connect(
     dbname=required_env("DB_NAME"),
     user=required_env("DB_USER"),
@@ -85,7 +105,10 @@ while True:
             data = response.json()
 
             if not data.get("success"):
-                print(f"API ERROR change_type={change_type}")
+                error_text = f"API ERROR change_type={change_type}: success=false"
+                log_error(conn, 2, error_text)
+                conn.commit()
+                print(error_text)
                 continue
 
             items = data.get("items", [])
@@ -125,7 +148,10 @@ while True:
 
                 except Exception as parse_error:
 
-                    print(f"PARSE ERROR: {parse_error}")
+                    error_text = f"PARSE ERROR change_type={change_type}: {parse_error}"
+                    log_error(conn, 2, error_text)
+                    conn.commit()
+                    print(error_text)
 
             if not rows:
                 print(f"No parsed rows for change_type={change_type}")
@@ -174,6 +200,14 @@ while True:
 
             conn.rollback()
 
-            print(f"ERROR change_type={change_type}: {e}")
+            error_text = f"ERROR change_type={change_type}: {e}"
+            try:
+                log_error(conn, 2, error_text)
+                conn.commit()
+            except Exception as log_error_exc:
+                conn.rollback()
+                print(f"LOG ERROR change_type={change_type}: {log_error_exc}")
+
+            print(error_text)
 
     time.sleep(90)
