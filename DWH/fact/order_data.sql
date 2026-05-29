@@ -7,5 +7,5 @@ CREATE TABLE fact.order_data (
 
   
 	CONSTRAINT order_data_pk PRIMARY KEY (order_id),  
-  CONSTRAINT order_data_output_transaction_fk FOREIGN KEY (transaction_uuid) REFERENCES payment.output_transaction(transaction_uuid)
+  CONSTRAINT order_data_output_transaction_fk FOREIGN KEY (transaction_uuid) REFERENCES acquiring.output_transaction(transaction_uuid)
 );

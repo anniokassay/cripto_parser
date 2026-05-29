@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION payment.create_uuid()
+CREATE OR REPLACE FUNCTION acquiring.create_uuid()
 RETURNS UUID AS $$
 DECLARE
     raw_uuid TEXT := md5(random()::text || clock_timestamp()::text);

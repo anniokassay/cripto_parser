@@ -1,6 +1,6 @@
 -- Заполнение таблицы за период 2026-05-27..2026-06-26:
 -- 7500 случайных записей на каждый день.
-INSERT INTO payment.output_transaction (
+INSERT INTO acquiring.output_transaction (
     operation_status,
     source_system_id,
     change_type_id,

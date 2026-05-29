@@ -1,5 +1,5 @@
-CREATE TABLE payment.output_transaction (
-    transaction_uuid    uuid        DEFAULT payment.create_uuid() NOT NULL,
+CREATE TABLE acquiring.output_transaction (
+    transaction_uuid    uuid        DEFAULT acquiring.create_uuid() NOT NULL,
     operation_status    varchar(32),
     source_system_id    BIGINT NOT NULL,
     change_type_id      INT NOT NULL,
@@ -15,4 +15,4 @@ CREATE TABLE payment.output_transaction (
   CONSTRAINT output_transaction_dict_fk FOREIGN KEY (change_type_id) REFERENCES dict.change_type(id)
 );
 
-  CREATE INDEX output_transaction_sys_ch_idx ON payment.output_transaction(source_system_id,change_type_id,transaction_uuid);
+  CREATE INDEX output_transaction_sys_ch_idx ON acquiring.output_transaction(source_system_id,change_type_id,transaction_uuid);
