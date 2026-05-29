@@ -1,1 +1,2 @@
 psycopg2-binary
+playwright # playwright install chromium

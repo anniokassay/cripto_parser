@@ -8,6 +8,7 @@ from psycopg2.extras import Json, execute_values
 
 URL = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
 
+c_load_type = 3
 headers = {
     "User-Agent": "Mozilla/5.0",
     "Accept": "application/json",

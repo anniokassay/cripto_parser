@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW user_data.v_bybit_info
+CREATE OR REPLACE VIEW report.v_bybit_info
 AS 
 WITH day_load AS (
   SELECT created_at::DATE   AS load_day,
