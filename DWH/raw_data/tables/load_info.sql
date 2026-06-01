@@ -7,6 +7,7 @@ CREATE TABLE raw_data.load_info (
   created_at    timestamptz DEFAULT clock_timestamp() NOT NULL,
 
   CONSTRAINT load_info_pk PRIMARY KEY (id),
+  CONSTRAINT load_info_load_type_row_uniq UNIQUE (load_type, load_type_row), 
   CONSTRAINT load_info_load_type_fk FOREIGN KEY (load_type) REFERENCES dict.load_type(id)
 );
 
@@ -15,3 +16,8 @@ CREATE INDEX load_info_id_idx ON raw_data.load_info(id);
 
 GRANT INSERT, SELECT ON ALL TABLES IN SCHEMA raw_data TO bybitparser;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA raw_data TO bybitparser;
+
+/* комментарий разрабочтика
+Технически тут демонстрируется возможность альтернативного создания уникального ключа и ведение его в общей таблице, в таком случае в таблицах источниках создаются ключи:
+CONSTRAINT data_bybit_ufk     FOREIGN KEY (load_type, load_type_row) REFERENCES raw_data.load_info(load_type, load_type_row)
+*/
