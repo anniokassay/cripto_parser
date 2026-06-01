@@ -1,0 +1,2 @@
+SELECT cron.schedule( '0 0 * * *', 'REFRESH MATERIALIZED VIEW staged_data.exchange_offer_hist');
+SELECT cron.schedule( '*/2 * * * *', 'REFRESH MATERIALIZED VIEW CONCURRENTLY staged_data.exchange_offer_current' );
