@@ -1,3 +1,4 @@
 .env
 .venv
 /DWH/users.sql
+/python/tg_bot

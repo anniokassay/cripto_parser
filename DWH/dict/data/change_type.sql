@@ -6,3 +6,5 @@ VALUES
   (3, 'USDT_p2p/VND', 'USDT', 'VND'),
   (4, 'VND/USDT_p2p', 'VND', 'USDT'),
   (5, 'USDT_p2p/CNY', 'USDT', 'CNY');
+
+  GRANT SELECT ON TABLE dict.change_type TO tgbot_analitic;
