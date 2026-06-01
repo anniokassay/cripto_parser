@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 import psycopg2
 
@@ -368,10 +369,28 @@ while True:
 
     except Exception as browser_error:
 
+        error_text = str(browser_error)
+
         print(
             f"Browser restart required: "
-            f"{browser_error}"
+            f"{error_text}"
         )
+
+        if (
+            "Playwright Sync API inside the asyncio loop"
+            in error_text
+        ):
+            try:
+                browser.close()
+            except:
+                pass
+
+            try:
+                playwright.stop()
+            except:
+                pass
+
+            sys.exit(1)
 
         try:
             browser.close()
