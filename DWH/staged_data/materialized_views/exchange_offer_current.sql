@@ -1,7 +1,7 @@
 -- DROP MATERIALIZED VIEW staged_data.exchange_offer_current
 CREATE MATERIALIZED VIEW staged_data.exchange_offer_current
 AS 
-SELECT ROW_NUMBER() OVER() AS sinth_id,
+SELECT ROW_NUMBER() OVER() AS synth_id,
        d.change_type_id,
        ct.currency_out,
        ct.currency_gain,
@@ -49,4 +49,4 @@ SELECT ROW_NUMBER() OVER() AS sinth_id,
   LEFT JOIN raw_data.load_info  lli ON lli.id = d.last_load_id
   JOIN dict.load_type           lt  ON lt.id = fli.load_type;
 
-  CREATE UNIQUE INDEX exchange_offer_uix ON staged_data.exchange_offer_current (sinth_id);
+  CREATE UNIQUE INDEX exchange_offer_uix ON staged_data.exchange_offer_current (synth_id);
