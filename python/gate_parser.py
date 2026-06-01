@@ -136,11 +136,11 @@ def fetch_market(page, payload):
 
 
 conn = psycopg2.connect(
-    dbname="dwh",
-    user="bybitparser",
-    password="TokenPWforByBit",
-    host="46.21.81.183",
-    port=5432
+    dbname=required_env("DB_NAME"),
+    user=required_env("DB_USER"),
+    password=required_env("DB_PASSWORD"),
+    host=required_env("DB_HOST"),
+    port=required_env("DB_PORT")
 )
 
 playwright = None
