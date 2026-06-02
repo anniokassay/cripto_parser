@@ -5,5 +5,7 @@ CREATE SCHEMA acquiring   AUTHORIZATION anniokassay;
 CREATE SCHEMA report      AUTHORIZATION anniokassay;
 CREATE SCHEMA staged_data AUTHORIZATION anniokassay;
  GRANT USAGE ON SCHEMA raw_data TO bybitparser;
+ GRANT USAGE ON SCHEMA raw_data TO grafana;
+ GRANT USAGE ON SCHEMA dict TO grafana;
  GRANT USAGE ON SCHEMA dict TO tgbot_analitic;
  GRANT USAGE ON SCHEMA report TO tgbot_analitic;

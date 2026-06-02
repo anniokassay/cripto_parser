@@ -1,0 +1,8 @@
+apt update
+apt install -y wget gnupg2 software-properties-common
+wget -q -O - https://apt.grafana.com/gpg.key | apt-key add -
+
+echo "deb https://apt.grafana.com stable main" \
+    > /etc/apt/sources.list.d/grafana.list
+apt update
+apt install grafana -y

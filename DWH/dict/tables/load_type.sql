@@ -5,3 +5,4 @@ CREATE TABLE dict.load_type (
 	source_name		varchar(256)  NOT NULL,
 	CONSTRAINT load_type_pk PRIMARY KEY (id)
 );
+GRANT SELECT ON ALL TABLES IN SCHEMA dict TO grafana;
