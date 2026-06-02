@@ -1,6 +1,6 @@
 # cripto_parser
 Demonstration project of DWH architecture
-
+# Bybi_parser отключен из-за прогрем с интеграцией API
 ## Secure database config
 
 Parsers read database settings from environment variables:

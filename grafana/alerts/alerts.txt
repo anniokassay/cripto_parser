@@ -1,0 +1,6 @@
+SELECT
+    NOW() AS time,
+    pg_database_size(current_database()) / 1024 / 1024 AS size_mb;
+    --
+Is above
+1024
